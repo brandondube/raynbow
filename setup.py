@@ -10,7 +10,7 @@ setup(
     author='Brandon Dube',
     author_email='brandondube@gmail.com',
     url='https://github.com/brandondube/raynbow',
-    packages=['prysm'],
+    packages=['raynbow'],
     install_requires=['numpy', 'scipy', 'matplotlib'],
     classifiers=[
         'Development Status :: 4 - Beta',
