@@ -162,10 +162,11 @@ def _prepare_ciesource_spectrum(illuminant):
     p = Path(__file__).parent / 'datasets' / file
     with open(p, 'r') as fid:
         reader = csv.reader(fid)
+        next(reader)
         for row in reader:
             tmp_list.append(row)
 
-    values = np.asarray(tmp_list[1:])
+    values = np.asarray(tmp_list, dtype=np.float64)
     return {
         'wvl': values[:, 0],
         'values': values[:, column],
@@ -186,7 +187,7 @@ def value_array_to_tristimulus(values):
         with keys: wvl, X, Y, Z
 
     """
-    values = np.asarray(values)
+    values = np.asarray(values, dtype=np.float64)
     wvl, X, Y, Z = values[:, 0], values[:, 1], values[:, 2], values[:, 3]
     return {
         'wvl': wvl,
@@ -207,14 +208,8 @@ def prepare_cie_1931_2deg_observer():
         with keys: wvl, X, Y, Z
 
     """
-    tmp_list = []
     p = Path(__file__).parent / 'datasets' / 'cie_xyz_1931_2deg_tristimulus_5nm.csv'
-    with open(p, 'r') as fid:
-        reader = csv.reader(fid)
-        for row in reader:
-            tmp_list.append(row)
-
-    return value_array_to_tristimulus(tmp_list[1:])
+    return _prepare_observer_core(p)
 
 
 @lru_cache()
@@ -227,14 +222,32 @@ def prepare_cie_1964_10deg_observer():
         with keys: wvl, X, Y, Z
 
     """
-    tmp_list = []
     p = Path(__file__).parent / 'datasets' / 'cie_xyz_1964_10deg_tristimulus_5nm.csv'
-    with open(p, 'r') as fid:
+    return _prepare_observer_core(p)
+
+
+def _prepare_observer_core(path):
+    """Read an observer .csv file and converts it to the dict format.
+
+    Parameters
+    ----------
+    path : path_like
+        pathlike object that points to a .csv file containing observer data
+
+    Returns
+    -------
+    `dict`
+        dict with keys wvl, X, Y, Z
+
+    """
+    tmp_list = []
+    with open(path, 'r') as fid:
         reader = csv.reader(fid)
+        next(reader)  # skip header row
         for row in reader:
             tmp_list.append(row)
 
-    return value_array_to_tristimulus(tmp_list[1:])
+    return value_array_to_tristimulus(tmp_list)
 
 
 def prepare_cmf(observer='1931_2deg'):
