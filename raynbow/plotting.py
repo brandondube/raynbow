@@ -2,10 +2,11 @@
 from functools import lru_cache
 
 import numpy as np
-from numpy import atan2, pi, cos, sin
+from numpy import arctan2 as atan2, pi, cos, sin
 from scipy.spatial import Delaunay
 
 from matplotlib.collections import LineCollection
+from matplotlib.ticker import NullLocator
 
 from raynbow.utilities import share_fig_ax, smooth
 from raynbow.colorspaces import (
@@ -609,4 +610,34 @@ def cct_duv_diagram(samples=100, fig=None, ax=None):
     ax.set(xlim=xlim, xlabel='CCT [K]',
            ylim=ylim, ylabel='Duv [a.u.]')
 
+    return fig, ax
+
+
+def plot_xy_color_swatch(xy, fig=None, ax=None):
+    """Plot a color swatch for a given pair of xy chromaticity coordinates.
+
+    Parameters
+    ----------
+    xy : `numpy.ndarray`
+        ndarray of x,y chromaticity coordinates
+    fig : `matplotlib.figure.Figure`
+        Figure to draw plot in
+    ax : `matplotlib.axes.Axis`
+        Axis to draw plot in
+
+    Returns
+    -------
+    fig : `matplotlib.figure.Figure`
+        Figure to draw plot in
+    ax : `matplotlib.axes.Axis`
+        Axis to draw plot in
+
+    """
+    xyz = xy_to_XYZ(xy)
+    rgb = XYZ_to_sRGB(xyz)
+    imgarr = np.ones((2, 2, 3)) * rgb * 4  # 100 transmission => peak of 0.25, * 4 rescales values to fill [0,1]
+    fig, ax = share_fig_ax(fig, ax)
+    ax.imshow(imgarr, interpolation=None)
+    ax.xaxis.set_major_locator(NullLocator())
+    ax.yaxis.set_major_locator(NullLocator())
     return fig, ax
