@@ -153,7 +153,7 @@ def spectrum_to_XYZ_nonemissive(spectrum_dict, illuminant='D65', cmf='1931_2deg'
     wvl_cmf = cmf['wvl']
     try:
         can_be_direct = np.allclose(wvl_cmf, wvl)
-    except ValueError as e:
+    except (TypeError, ValueError):
         can_be_direct = False
 
     if not can_be_direct:
@@ -164,7 +164,7 @@ def spectrum_to_XYZ_nonemissive(spectrum_dict, illuminant='D65', cmf='1931_2deg'
 
     try:
         can_be_direct_illuminant = np.allclose(wvl_cmf, ill_spectrum['wvl'])
-    except ValueError as e:
+    except (TypeError, ValueError):
         can_be_direct_illuminant = False
     if can_be_direct_illuminant:
         ill_spectrum = ill_spectrum['values']
