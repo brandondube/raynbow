@@ -34,6 +34,35 @@ CIE_ILLUMINANT_METADATA = {
         'HP1': 1, 'HP2': 2, 'HP3': 3, 'HP4': 4, 'HP5': 5,
     }
 }
+COLORCHECKER_METADATA = {
+    'file': 'babel_colorchecker_10nm.csv',
+    'columns': {
+        'dark skin': 1,
+        'light skin': 2,
+        'blue sky': 3,
+        'foliage': 4,
+        'blue flower': 5,
+        'bluish green': 6,
+        'orange': 7,
+        'purplish blue': 8,
+        'moderate red': 9,
+        'purple': 10,
+        'yellow green': 11,
+        'orange yellow': 12,
+        'blue': 13,
+        'green': 14,
+        'red': 15,
+        'yellow': 16,
+        'magenta': 17,
+        'cyan': 18,
+        'white 9.5': 19,
+        'neutral 8': 20,
+        'neutral 6.5': 21,
+        'neutral 5': 22,
+        'neutral 3.5': 23,
+        'black 2': 24,
+    }
+}
 
 
 @lru_cache()
@@ -298,6 +327,38 @@ def blackbody_spectrum(temperature, wavelengths):
         1 / (exp((h * c) / (wavelengths * k * temperature) - 1))
 
 
+@lru_cache()
+def prepare_colorchecker_data():
+    """Load spectral data associated with an x-rite color checker chart
+
+    Returns
+    -------
+    `dict`
+        super spectrum dictionary with keys wvl, dark skin, etc.  See COLORCHECKER_METADATA
+        for complete list of keys
+
+    Notes
+    -----
+    http://www.babelcolor.com/index_htm_files/ColorChecker_RGB_and_spectra.xls
+    BabelColor ColorChecker data: Copyright © 2004‐2012 Danny Pascale (www.babelcolor.com);
+    used by permission.
+
+    """
+    p = Path(__file__).parent / 'datasets' / COLORCHECKER_METADATA['file']
+    tmp_list = []
+    with open(p, 'r') as fid:
+        reader = csv.reader(fid)
+        next(reader)
+        for row in reader:
+            tmp_list.append(row)
+
+    out = {'wvl': np.asarray([row[0] for row in tmp_list], dtype=np.float64)}
+    for name, rowidx in COLORCHECKER_METADATA['columns'].items():
+        out[name] = np.asarray([row[rowidx] for row in tmp_list], dtype=np.float64)
+
+    return out
+
+
 def normalize_spectrum(spectrum, to='peak vis'):
     """Normalize a spectrum to have unit peak within the visible band.
 
@@ -321,6 +382,8 @@ def normalize_spectrum(spectrum, to='peak vis'):
     elif to.lower() in ('peak 560', '560', '560nm'):
         idx = np.searchsorted(wvl, 560)
         vals2 = vals / vals[idx]
+    else:
+        raise ValueError('invalid normalization target')
     return {
         'wvl': wvl,
         'values': vals2,

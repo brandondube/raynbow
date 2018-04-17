@@ -1,0 +1,13 @@
+Montreal, April 16, 2018
+ 
+Subject: Use of BabelColor data in the "raynbow" software project.
+ 
+I hereby give permission to "Brandon Dube" (brandondube@gmail.com), the current "raynbow" project manager,
+to use the "BabelColor ColorChecker data" from the
+http://www.babelcolor.com/index_htm_files/ColorChecker_RGB_and_spectra.xls (see Reference below)
+in the "raynbow" software project which is currently hosted
+at the Web page: https://github.com/brandondube/raynbow
+ 
+Reference:
+http://www.babelcolor.com/index_htm_files/ColorChecker_RGB_and_spectra.xls
+BabelColor ColorChecker data: Copyright © 2004‐2012 Danny Pascale (www.babelcolor.com); used by permission.
