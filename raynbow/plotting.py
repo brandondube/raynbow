@@ -635,7 +635,7 @@ def plot_xy_color_swatch(xy, fig=None, ax=None):
     """
     xyz = xy_to_XYZ(xy)
     rgb = XYZ_to_sRGB(xyz)
-    imgarr = np.ones((2, 2, 3)) * rgb * 4  # 100 transmission => peak of 0.25, * 4 rescales values to fill [0,1]
+    imgarr = np.ones((2, 2, 3)) * rgb * 3.975  # 100 transmission => peak of 0.25, * 4 rescales values to fill [0,1]
     fig, ax = share_fig_ax(fig, ax)
     ax.imshow(imgarr, interpolation=None)
     ax.xaxis.set_major_locator(NullLocator())
