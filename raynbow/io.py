@@ -10,10 +10,11 @@ def read_file_stream_or_path(path_or_file):
         with open(path_or_file, mode='r') as fid:
             data = fid.read()
     except (OSError, FileNotFoundError):  # not a path, file_like
-        path_or_file.seek(0)
-        data = path_or_file.read()
-    except AttributeError:
-        data = path_or_file
+        try:
+            path_or_file.seek(0)
+            data = path_or_file.read()
+        except AttributeError:
+            data = path_or_file
 
     return data
 
