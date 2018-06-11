@@ -68,14 +68,17 @@ def read_oceanoptics(file, metadata=False):
     if metadata:
         # date
         date_raw = txtlines[2].split()[1:]
-        print(date_raw)
         (month, day, time), year = date_raw[1:4], date_raw[-1]
         month_no = list(calendar.month_abbr).index(month)
         h, m, s = time.split(':')
         timestamp = datetime.datetime(year=int(year), month=month_no, day=int(day),
                                       hour=int(h), minute=int(m), second=int(s))
+
+        # user, instrment
         user = ' '.join(txtlines[3].split()[1:])
         spec = txtlines[4].split()[-1]
+
+        # capture metadata
         integration = float(txtlines[6].split()[-1]) * 1e3
         averages = int(txtlines[7].split()[-1])
         dark_corrected = txtlines[8].split()[-1] == 'true'
