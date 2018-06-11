@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='raynbow',
-    version='0.1.3',
+    version='0.1.4',
     description='A python module for analysis of spectral data',
     long_description='',
     license='MIT',
